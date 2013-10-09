@@ -1,0 +1,52 @@
+## HIGHLY RECOMMENDED LISTS
+# anti-ad and anti-malware list (winhelp2002.mvps.org/hosts.htm)
+1,http://winhelp2002.mvps.org/hosts.zip
+# anti-ad (pgl.yoyo.org/adservers/)
+1,http://pgl.yoyo.org/as/serverlist.php?hostformat=hosts&showintro=0&mimetype=plaintext
+# hpHosts main anti-ad and anti-malware (hosts-file.net/)
+0,http://hosts-file.net/download/hosts.zip
+# anti-malware (www.malwaredomainlist.com/)
+0,http://www.malwaredomainlist.com/hostslist/hosts.txt
+0,http://mirror1.malwaredomains.com/files/justdomains
+# anti-ads-only version of hpHosts main list (hosts-file.net)
+0,http://hosts-file.net/ad_servers.asp
+## RECOMMENDED LISTS
+# hpHosts inter-release (hosts-file.net/)
+0,http://hosts-file.net/hphosts-partial.asp
+# anti-malware (hostsfile.org/hosts.html)
+0,http://hostsfile.org/Downloads/BadHosts.unx.zip
+# anti-ad (hostsfile.mine.nu
+0,http://hostsfile.mine.nu/Hosts.zip
+# anti-ad and anti-malware (someonewhocares.org/hosts/)
+0,http://someonewhocares.org/hosts/hosts
+# anti-ad (sysctl.org/cameleon/)
+0,http://sysctl.org/cameleon/hosts
+# anti-ads for mobile devices
+0,http://www.ismeh.com/HOSTS
+## OPTIONAL LISTS
+# hpHosts for yahoo adservers (hosts-file.net/)
+0,http://hosts-file.net/download/yahoo_servers.zip
+# supplemented version of someonewhocares.org list (https://nauscopio.wordpress.com/category/filtrado/)
+0,http://abp.mozilla-hispano.org/nauscopio/hosts.zip
+# anti-trackers (very large) (rlwpx.free.fr/WPFF)
+0,http://rlwpx.free.fr/WPFF/htrc.7z
+# anti-advertising (very large) (rlwpx.free.fr/WPFF)
+0,http://rlwpx.free.fr/WPFF/hpub.7z
+# anti-malware (very large) (rlwpx.free.fr/WPFF)
+0,http://rlwpx.free.fr/WPFF/hrsk.7z
+# anti-porn (very large) (rlwpx.free.fr/WPFF)
+0,http://rlwpx.free.fr/WPFF/hsex.7z
+# miscellaneous sites to be blocked (rlwpx.free.fr/WPFF)
+0,http://rlwpx.free.fr/WPFF/hmis.7z
+## My
+0,http://support.it-mate.co.uk/downloads/HOSTS.txt
+0,http://www.hostsfile.org/Downloads/hosts.txt
+0,http://www.securemecca.com/Downloads/hosts.txt
+0,https://palevotracker.abuse.ch/blocklists.php?download=domainblocklist
+0,https://spyeyetracker.abuse.ch/blocklist.php?download=domainblocklist
+0,https://zeustracker.abuse.ch/blocklist.php?download=domainblocklist
+## LISTS WITH REDIRECTIONS. Enable redirects="1" to enable, and also uncomment
+# redirections for phished sites (rlwpx.free.fr/WPFF)
+0,http://rlwpx.free.fr/WPFF/hblc.7z
+# anti-ad and redirections; contains some badly formatted entries (http://modyouri.com/showthread.php?t=1)
+0,http://www.modyouri.com/adblock_hosts/hosts
