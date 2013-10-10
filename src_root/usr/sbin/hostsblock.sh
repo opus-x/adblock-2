@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/bin/bash
+
+# DO NOT MODIFY THIS FILE. MODIFY SETTINGS VIA THE CONFIGURATION FILES IN
+# /opt/etc/hostsblock/
 
 eval PATH=/opt/usr/sbin:/opt/etc/init.d:$PATH
 
@@ -55,13 +58,13 @@ if [ "$logfile" != "0" ]; then
     exec > "$logfile" 2>&1
 fi
 
-echo "Hostsblock started at `date +'%x %T'`"
+echo -e "\nHostsblock started at `date +'%x %T'`"
 
 # READ CONFIGURATION FILE.
-if [ -f /opt/etc/hostsblock/rc.conf ]; then
-    . /opt/etc/hostsblock/rc.conf
+if [ -f /opt/etc/hostsblock/hostsblock.conf ]; then
+    . /opt/etc/hostsblock/hostsblock.conf
 else
-    echo "Config file /opt/etc/hostsblock/rc.conf not found. Using defaults."
+    echo "Config file /opt/etc/hostsblock/hostsblock.conf not found. Using defaults."
 fi
 
 # CREATE CACHE DIRECTORY IF NOT ALREADY EXISTANT
@@ -83,14 +86,14 @@ if [ -f /opt/etc/hostsblock/blocklists.csv ]; then
                 new_ls=`ls -l "$cachedir"/"$outfile"`
                 if [ "$old_ls" != "$new_ls" ]; then
                     changed=1
-                    echo "UPDATED"
-                else
-                    echo "no changes"
-                fi
-            else
-                echo -e "FAILED\nScript exiting @ `date +'%x %T'`"
-                exit 1
-            fi
+            printf "UPDATED"
+        else
+            printf "no changes"
+        fi
+    else
+        printf "FAILED\nScript exiting @ `date +'%x %T'`"
+        exit 1
+    fi
         else
             continue
         fi
@@ -108,56 +111,55 @@ if [ "$changed" != "0" ]; then
     [ -d "$tmpdir"/hostsblock/hosts.block.d ] || mkdir -p "$tmpdir"/hostsblock/hosts.block.d
 
     # BACK UP EXISTING HOSTSFILE
-    echo -e "\nBacking up $hostsfile to $hostsfile.old..."
-    cp "$hostsfile" "$hostsfile".old && echo "done" || echo "FAILED"
+    printf "\nBacking up $hostsfile to $hostsfile.old..."
+    cp "$hostsfile" "$hostsfile".old && printf "done" || printf "FAILED"
 
     # EXTRACT CACHED FILES TO HOSTS.BLOCK.D
-    echo -e "\n\nExtracting and preparing cached files to working directory..."
+    printf "\n\nExtracting and preparing cached files to working directory..."
     n=1
     if [ -f /opt/etc/hostsblock/blocklists.csv ]; then
         OLD_IFS=$IFS
         IFS=','
         while read switch url ; do
             if [ "$switch" == "1" ]; then
-                FILE=`echo $url | sed "s|http:\/\/||g" | tr '/%&=?' '.'`
-                echo -e "\n    `basename $FILE | tr -d '\%'`..."
-                case "$FILE" in
-                    *".zip")
-                        if [ $zip == "1" ]; then
-                            mkdir "$tmpdir"/hostsblock/tmp
-                            cp "$cachedir"/"$FILE" "$tmpdir"/hostsblock/tmp
-                            cd "$tmpdir"/hostsblock/tmp
-                            echo "extracting..."
-                            #unzip -jq "$FILE" &>/dev/null && echo "extracted..." || echo "FAILED"
-                            unzip -q "$FILE" &>/dev/null && echo "extracted..." || echo "FAILED"
-                            grep -rIh -- "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" ./* > "$tmpdir"/hostsblock/hosts.block.d/hosts.block.$n
-                            cd "$tmpdir"/hostsblock
-                            rm -r "$tmpdir"/hostsblock/tmp
-                            echo "prepared"
-                        else
-                            echo "unzip not found. Skipping"
-                        fi
-                    ;;
-                    *".7z")
-                        if [ $zip7 == "1" ]; then
-                            mkdir "$tmpdir"/hostsblock/tmp
-                            cp "$cachedir"/"$FILE" "$tmpdir"/hostsblock/tmp
-                            cd "$tmpdir"/hostsblock/tmp
-                            echo "extracting..."
-                            7za e "$FILE" &>/dev/null && echo "extracted..." || echo "FAILED"
-                            grep -rIh -- "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" ./* > "$tmpdir"/hostsblock/hosts.block.d/hosts.block.$n
-                            cd "$tmpdir"/hostsblock
-                            rm -r "$tmpdir"/hostsblock/tmp
-                            echo "prepared"
-                        else
-                            echo "7za not found. Skipping"
-                        fi
-                    ;;
-                    *)
-                        cp "$cachedir"/"$FILE" "$tmpdir"/hostsblock/hosts.block.d/hosts.block.$n && echo "prepared" || echo "FAILED"
-                    ;;
-                esac
-                let "n+=1"
+        FILE=`echo $url | sed "s|http:\/\/||g" | tr '/%&=?' '.'`
+        printf "\n    `basename $FILE | tr -d '\%'`..."
+        case "$FILE" in
+            *".zip")
+                if [ $zip == "1" ]; then
+                    mkdir "$tmpdir"/hostsblock/tmp
+                    cp "$cachedir"/"$FILE" "$tmpdir"/hostsblock/tmp
+                    cd "$tmpdir"/hostsblock/tmp
+                    printf "extracting..."
+                    unzip -jq "$FILE" &>/dev/null && printf "extracted..." || printf "FAILED"
+                    grep -rIh -- "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" ./* > "$tmpdir"/hostsblock/hosts.block.d/hosts.block.$n
+                    cd "$tmpdir"/hostsblock
+                    rm -r "$tmpdir"/hostsblock/tmp
+                    printf "prepared"
+                else
+                    printf "unzip not found. Skipping"
+                fi
+            ;;
+            *".7z")
+                if [ $zip7 == "1" ]; then
+                    mkdir "$tmpdir"/hostsblock/tmp
+                    cp "$cachedir"/"$FILE" "$tmpdir"/hostsblock/tmp
+                    cd "$tmpdir"/hostsblock/tmp
+                    printf "extracting..."
+                    7za e "$FILE" &>/dev/null && printf "extracted..." || printf "FAILED"
+                    grep -rIh -- "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" ./* > "$tmpdir"/hostsblock/hosts.block.d/hosts.block.$n
+                    cd "$tmpdir"/hostsblock
+                    rm -r "$tmpdir"/hostsblock/tmp
+                    printf "prepared"
+                else
+                    printf "7za not found. Skipping"
+                fi
+            ;;
+            *)
+                cp "$cachedir"/"$FILE" "$tmpdir"/hostsblock/hosts.block.d/hosts.block.$n && printf "prepared" || printf "FAILED"
+            ;;
+        esac
+        let "n+=1"
             else
                 continue
             fi
@@ -173,11 +175,10 @@ if [ "$changed" != "0" ]; then
     sed "s|^|$redirecturl |g" >> "$tmpdir"/hostsblock/hosts.block.d/hosts.block.0 && echo "prepared" || echo "FAILED"
 
     # GENERATE WHITELIST SED SCRIPT
-    echo -e "\n    Local whitelist..."
+    printf "\n    Local whitelist..."
     cat "$whitelist" |\
-    sed -e 's/.*/\/&\/d/' -e 's/\./\\./g' >> "$tmpdir"/hostsblock/whitelist.sed && echo "prepared" || echo "FAILED"
+    sed -e 's/.*/\/&\/d/' -e 's/\./\\./g' >> "$tmpdir"/hostsblock/whitelist.sed && printf "prepared" || printf "FAILED"
 
-    echo -e "\nDONE.\n\nProcessing files..."
     # DETERMINE THE REDIRECT URL NOT BEING USED
     if [ "$redirecturl" == "127.0.0.1" ]; then
         notredirect="0.0.0.0"
@@ -192,6 +193,7 @@ if [ "$changed" != "0" ]; then
         cp -f "$hostshead" "$hostsfile"
     fi
 
+    printf "\nDONE.\n\nProcessing files..."
     # DETERMINE WHETHER TO INCLUDE REDIRECTIONS
     if [ "$redirects" == "1" ]; then
         grep_eval='grep -Ih -- "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" "$tmpdir"/hostsblock/hosts.block.d/*'
@@ -201,16 +203,21 @@ if [ "$changed" != "0" ]; then
 
     # PROCESS AND WRITE TO FILE
     eval $grep_eval | sed -e 's/[[:space:]][[:space:]]*/ /g' -e "s/\#.*//g" -e "s/[[:space:]]$//g" -e \
-    "s/$notredirect/$redirecturl/g" | sort -u | sed -f "$tmpdir"/hostsblock/whitelist.sed >> "$hostsfile" && echo -e "done\n"
+    "s/$notredirect/$redirecturl/g" | sort -u | sed -f "$tmpdir"/hostsblock/whitelist.sed >> "$hostsfile" && printf "done\n"
+
+    # APPEND BLACKLIST ENTRIES
+    printf "\nAppending blacklist entries..."
+    cat "$blacklist" |\
+        sed "s|^|$redirecturl |g" >> "$hostsfile" && printf "done\n" || printf "FAILED\n"
 
     # REPORT COUNT OF MODIFIED OR BLOCKED URLS
     for addr in `grep -Ih -- "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}" "$hostsfile" | cut -d" " -f1 | sort -u |\
     tr '\n' ' '`; do
         number=`grep -c -- "^$addr" "$hostsfile"`
         if [ "$addr" == "$redirecturl" ]; then
-            echo -e "\n$number urls blocked"
+            printf "\n$number urls blocked"
         else
-            echo -e "\n$number urls redirected to $addr"
+            printf "\n$number urls redirected to $addr"
         fi
     done
 
@@ -245,14 +252,14 @@ if [ "$changed" != "0" ]; then
 #    rm -rf "$hostsfile"
 
     # Replace the adblock stuff in the "custom" file.
-    sed -i "/^#BEGIN--adblock-custom/,/^#END--adblock-custom/d" /etc/dnsmasq.custom
-    echo -e "#BEGIN--adblock-custom\nconf-file=/opt/etc/adblock.conf\n#END--adblock-custom" > /etc/dnsmasq.custom
+    sed -i "/^#BEGIN--adblock-custom/,/^#END--adblock-custom/d" /tmp/etc/dnsmasq.custom
+    echo -e "#BEGIN--adblock-custom\nconf-file=/opt/etc/adblock.conf\n#END--adblock-custom" > /tmp/etc/dnsmasq.custom
 
     mv /tmp/adblock.conf /opt/etc/adblock.conf
 
     # COMMANDS TO BE EXECUTED AFTER PROCESSING
-    echo -e "\n\nRunning postprocessing..."
-    postprocess && echo -e "done\n" || echo "FAILED"
+    printf "\n\nRunning postprocessing..."
+    postprocess && printf "done\n" || printf "FAILED"
 
     # CLEAN UP
     rm -r "$tmpdir"/hostsblock
